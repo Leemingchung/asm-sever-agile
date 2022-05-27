@@ -1,0 +1,420 @@
+<script>
+    function editComics(id, Name, Logo, Author, Description) {
+        document.getElementById("UpdateID").value = id;
+        document.getElementById("UpdateName").value = Name;
+        document.getElementById("UpdateLogo").value = Logo;
+        document.getElementById("UpdateAuthor").value = Author;
+        document.getElementById("UpdateDescription").value = Description;
+    }
+
+    function addContentComics(id, Name) {
+        document.getElementById("AddContentID").value = id;
+        document.getElementById("AddContentName").value = Name;
+    }
+
+    function deleteComics(id) {
+        document.getElementById("DpInputID").value = id;
+    }
+</script>
+
+
+<div class="content">
+
+    {{#if msg}}
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </symbol>
+        </svg>
+        <p>{{{msg}}}</p>
+    {{/if}}
+    <div style="width: 100%">
+        <form class="d-flex mb-4 mt-3" method="POST" style="width: 500px;margin: auto">
+            <input class="form-control me-2" type="search" placeholder="Tìm kiếm truyện" aria-label="Search" name="searchUser">
+            <button class="btn btn-outline-success" type="submit" style="width: 150px">Tìm Kiếm</button>
+        </form>
+    </div>
+    <div class="row" style="display: contents;">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col" class="col-1">ID</th>
+                <th scope="col">Tên Truyện</th>
+                <th scope="col">Logo</th>
+                <th scope="col">Tác Giả</th>
+                <th scope="col">Chi Tiết</th>
+                <th scope="col">Trạng Thái</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each comics}}
+                <tr>
+                    <th scope="col">{{this._id}}</th>
+                    <th scope="col">{{this.Name}}</th>
+                    <th scope="col"><img style="width: 50px;height: 50px" src="{{this.Logo}}"
+                                         class="card-img-top card-img-top mt-2" alt="{{this.Name}}"></th>
+                    <th scope="col">{{this.Author}}</th>
+                    <th scope="col"><button
+                            type="button"
+                            class="btn btn-primary mb-1"
+                            data-bs-toggle="modal"
+                            data-bs-target="#AddContentModal"
+                            onclick="addContentComics('{{this._id}}','{{this.Name}}')"
+                    >
+                        Xem Chi tiết
+                    </button></th>
+                    <th scope="col">Đã Duyệt</th>
+
+                    <td class="col-1 text-center">
+                        <button
+                                type="button"
+                                class="btn btn-primary mb-1"
+                                data-bs-toggle="modal"
+                                data-bs-target="#AddContentModal"
+                                onclick="addContentComics('{{this._id}}','{{this.Name}}')"
+                        >
+                            Add Content
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-primary mb-1"
+                                data-bs-toggle="modal"
+                                data-bs-target="#UpdateModal"
+                                onclick="editComics('{{this._id}}','{{this.Name}}' ,'', '{{this.Author}}', '{{this.Description}}')"
+                        >
+                            Sửa
+                        </button>
+
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#DeleteModal"
+                                onclick="deleteComics('{{this._id}}')"
+                        >
+                            Xóa
+                        </button>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        <!-- Button trigger modal -->
+        <div class="row" style="margin: auto;">
+            <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+            >
+                Add Comic
+            </button>
+        </div>
+        <!--  add-->
+        <div
+                class="modal fade"
+                id="exampleModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+
+                <form action="/comics/add" method="POST" autocomplete="off" accept-charset="UTF-8"
+                      enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Thêm Truyện</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-4 row">
+                                    <label for="InputID" class="col-sm-3 col-form-label">ID:</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="InputID"
+                                                placeholder="ID"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="InputTen" class="col-sm-3 col-form-label">Name Comic</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                name="Name"
+                                                class="form-control text-dark"
+                                                id="InputName"
+                                                placeholder="Name Comic"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formFile" class="form-label">Logo</label>
+                                    <input class="form-control" type="file" id="InputLogo" name="Logo">
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="InputAuthor" class="col-sm-3 col-form-label">Author</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                name="Author"
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="InputAuthor"
+                                                placeholder="author"
+                                        />
+                                    </div>
+                                </div>
+
+
+                                <div class="mb-3">
+                                    <label for="InputDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="UpdateDescription" rows="3"
+                                              name="Description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >Close
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    data-bs-dismiss="modal"
+                            >Save changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--addcontent-->
+        <div
+                class="modal fade"
+                id="AddContentModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form action="/comics/add-content" method="POST" autocomplete="off" accept-charset="UTF-8"
+                      enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Update Comic</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-4 row">
+                                    <label for="AddContentID" class="col-sm-3 col-form-label">ID:</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                name="AddContentID"
+                                                class="form-control text-dark"
+                                                id="AddContentID"
+                                                placeholder="ID"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="AddContentName" class="col-sm-3 col-form-label">Name Comic:</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                name="AddContentName"
+                                                class="form-control text-dark"
+                                                id="AddContentName"
+                                                placeholder="Name Comic"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="formFileMultiple" class="form-label">Image Content</label>
+                                    <input class="form-control" type="file" id="AddContentImage" name="AddContentImage"
+                                           multiple>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >Close
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    data-bs-dismiss="modal"
+                            >Add Content
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--update-->
+        <div
+                class="modal fade"
+                id="UpdateModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form action="/comics/edit" method="POST" autocomplete="off" accept-charset="UTF-8" enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Update Comic</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-4 row">
+                                    <label for="UpdateID" class="col-sm-3 col-form-label">ID:</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                name="UpdateID"
+                                                class="form-control text-dark"
+                                                id="UpdateID"
+                                                placeholder="ID"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="UpdateName" class="col-sm-3 col-form-label">Name Comic:</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                name="UpdateName"
+                                                class="form-control text-dark"
+                                                id="UpdateName"
+                                                placeholder="Name Comic"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="UpdateLogo" class="form-label">Logo</label>
+                                    <input class="form-control" type="file" id="UpdateLogo" name="UpdateLogo">
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="UpdateAuthor" class="col-sm-3 col-form-label">Author:</label>
+                                    <div class="col-sm-9">
+                                        <input
+                                                type="text"
+                                                name="UpdateAuthor"
+                                                class="form-control text-dark"
+                                                id="UpdateAuthor"
+                                                placeholder="author"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="InputUpdateDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="UpdateInputDescription" rows="3"
+                                              name="UpdateDescription"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >Close
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    data-bs-dismiss="modal"
+                            >Save changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--Delete-->
+        <div
+                class="modal fade"
+                id="DeleteModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form action="/comics/delete" method="POST" autocomplete="off">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete!</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-3 row">
+                                    <label for="DpInputID" class="col-sm-2 col-form-label">ID:</label>
+                                    <div class="col-sm-10">
+                                        <input
+                                                name="DpInputID"
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="DpInputID"
+                                                placeholder="ID"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                    >No
+                                    </button>
+                                    <button
+                                            type="submit"
+                                            class="btn btn-primary"
+                                            data-bs-dismiss="modal"
+                                    >Yes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

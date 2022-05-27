@@ -1,0 +1,522 @@
+<script>
+    function editUser(id, fullName, userName, email, password, role) {
+        document.getElementById("UpInputID").value = id;
+        document.getElementById("UpInputFullName").value = fullName;
+        document.getElementById("UpInputUserName").value = userName;
+        document.getElementById("UpstaticEmail").value = email;
+        if (role.toString() === "Admin") {
+            document.getElementById("UpInputRoles").value = "Admin";
+        } else {
+            document.getElementById("UpInputRoles").value = "User";
+        }
+    }
+    function deleteUser(id) {
+        document.getElementById("DpInputID").value = id;
+    }
+    function showInfo(id) {
+        document.getElementById("DpInputID").value = id;
+    }
+</script>
+<div class="content">
+    <div style="width: 100%">
+        <form class="d-flex mb-4 mt-3" method="POST" style="width: 500px;margin: auto">
+            <input class="form-control me-2" type="search" placeholder="Tìm kiếm người dùng" aria-label="Search" name="searchUser">
+            <button class="btn btn-outline-success" type="submit" style="width: 150px">Tìm Kiếm</button>
+        </form>
+    </div>
+    <div class="row" style="display: contents;">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Full name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
+                <th scope="col">Thông tin chi tiết</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each user}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.FullName}}</td>
+                    <td>{{this.Email}}</td>
+                    <td>{{this.Role}}</td>
+                    <td><button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#UpdateModal"
+                            onclick="editUser('{{this._id}}', '{{this.FullName}}', '{{this.UserName}}', '{{this.Email}}', '{{this.Password}}', '{{this.Role}}')"
+                    >
+                        Xem thông tin chi tiết
+                    </button></td>
+                    <td>
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#UpdateModal"
+                                onclick="editUser('{{this._id}}', '{{this.FullName}}', '{{this.UserName}}', '{{this.Email}}', '{{this.Password}}', '{{this.Role}}')"
+                        >
+                            Sửa
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#DeleteModal"
+                                onclick="deleteUser('{{this._id}}')"
+                        >
+                            Xóa
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#DeleteModal"
+                                onclick="deleteUser('{{this._id}}')"
+                        >
+                            Đổi mật khẩu
+                        </button>
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        <!-- Button trigger modal -->
+        <div class="row" style="margin: auto;">
+            <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+            >
+                Thêm người dùng
+            </button>
+        </div>
+        <!-- Modal add-->
+        <div
+                class="modal fade"
+                id="exampleModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form action="/user/add" method="POST" autocomplete="off" enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Thêm User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-3 row">
+                                    <label
+                                            for="InputFullName"
+                                            class="col-sm-2 col-form-label"
+                                    >FullName:</label>
+                                    <div class="col-sm-10">
+                                        <input  name="FullName"
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="InputFullName"
+                                                placeholder="FullName" />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="staticEmail"
+                                            class="col-sm-2 col-form-label"
+                                    >Email</label>
+                                    <div class="col-sm-10">
+                                        <input  name="Email"
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="staticEmail"
+                                                placeholder="email@example.com" />
+                                    </div>
+                                </div>
+
+                                <fieldset class="row mb-3">
+                                    <legend class="col-form-label col-sm-3 pt-0">Giới tính</legend>
+                                    <div class="col-sm-9">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radioGT" id="Nam" value="Nam" checked>
+                                            <label class="form-check-label" for="gridRadios1">
+                                                Nam
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radioGT" id="Nu" value="Nữ">
+                                            <label class="form-check-label" for="gridRadios2">
+                                                Nữ
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="staticEmail"
+                                            class="col-sm-2 col-form-label"
+                                    >Ngày sinh</label>
+                                    <div class="col-sm-3">
+                                        <label for="inputDay" class="form-label">Ngày</label>
+                                        <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="DayOfBirth" id="DayOfBirth">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                            <option value="13">13</option>
+                                            <option value="14">14</option>
+                                            <option value="15">15</option>
+                                            <option value="16">16</option>
+                                            <option value="17">17</option>
+                                            <option value="18">18</option>
+                                            <option value="19">19</option>
+                                            <option value="20">20</option>
+                                            <option value="21">21</option>
+                                            <option value="22">22</option>
+                                            <option value="23">23</option>
+                                            <option value="24">24</option>
+                                            <option value="25">25</option>
+                                            <option value="26">26</option>
+                                            <option value="27">27</option>
+                                            <option value="28">28</option>
+                                            <option value="29">29</option>
+                                            <option value="30">30</option>
+                                            <option value="31">31</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label for="inputMonth" class="form-label">Tháng</label>
+                                        <select name="MonthOfBirth" id="MonthOfBirth" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label for="inputYear" class="form-label">Năm</label>
+                                        <select name="YearOfBirth" id="YearOfBirth" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2015">2015</option>
+                                        <option value="2014">2014</option>
+                                        <option value="2013">2013</option>
+                                        <option value="2012">2012</option>
+                                        <option value="2011">2011</option>
+                                        <option value="2010">2010</option>
+                                        <option value="2009">2009</option>
+                                        <option value="2008">2008</option>
+                                        <option value="2007">2007</option>
+                                        <option value="2006">2006</option>
+                                        <option value="2005">2005</option>
+                                        <option value="2004">2004</option>
+                                        <option value="2003">2003</option>
+                                        <option value="2002">2002</option>
+                                        <option value="2001">2001</option>
+                                        <option value="2000">2000</option>
+                                        <option value="1999">1999</option>
+                                        <option value="1998">1998</option>
+                                        <option value="1997">1997</option>
+                                        <option value="1996">1996</option>
+                                        <option value="1995">1995</option>
+                                        <option value="1994">1994</option>
+                                        <option value="1993">1993</option>
+                                        <option value="1992">1992</option>
+                                        <option value="1991">1991</option>
+                                        <option value="1990">1990</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="InputFullName"
+                                            class="col-sm-2 col-form-label"
+                                    >SĐT</label>
+                                    <div class="col-sm-10">
+                                        <input  name="SDT"
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="InputSDT"
+                                                placeholder="Số điện Thoại" />
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label
+                                            for="staticPassword"
+                                            class="col-sm-2 col-form-label"
+                                    >Password</label>
+                                    <div class="col-sm-10">
+                                        <input
+                                                name="Password"
+                                                type="password"
+                                                class="form-control text-dark"
+                                                id="staticPassword"
+                                                placeholder="password"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="staticCPassword"
+                                            class="col-sm-2 col-form-label"
+                                    >Confirm Password</label>
+                                    <div class="col-sm-10 col-form-label">
+                                        <input
+                                                name="CPassword"
+                                                type="password"
+                                                class="form-control text-dark"
+                                                id="staticCPassword"
+                                                placeholder="Confirm password"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row ">
+                                    <label class="col-sm-2 col-form-label">role</label>
+                                    <div class="col-sm-9 col-form-label">
+                                        <label>
+                                            <select id="RoleAdd" name="AddRole">
+                                                <option value="Admin">Admin</option>
+                                                <option value="User">User</option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="mb-3">
+                                    <label for="formFile" class="form-label">Avatar</label>
+                                    <input class="form-control col-sm-10 col-form-label" type="file" id="InputAvatar" name="Avatar">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >Close
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Modal update-->
+        <div
+                class="modal fade"
+                id="UpdateModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form action="/user/edit" method="POST" autocomplete="off">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Sửa User</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-3 row">
+                                    <label for="UpInputID" class="col-sm-2 col-form-label">ID:</label>
+                                    <div class="col-sm-10 ">
+                                        <input
+                                                name="UpInputID"
+                                                type="text"
+                                                class="form-control text-dark "
+                                                id="UpInputID"
+                                                placeholder="ID"
+
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="UpInputFullName"
+                                            class="col-sm-2 col-form-label"
+                                    >FullName:</label>
+                                    <div class="col-sm-10">
+                                        <input
+                                                name="UpInputFullName"
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="UpInputFullName"
+                                                placeholder="FullName"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="UpInputUserName"
+                                            class="col-sm-2 col-form-label"
+                                    >UserName:</label>
+                                    <div class="col-sm-10">
+                                        <input name="UpInputUserName" type="text" class="form-control text-dark" id="UpInputUserName" placeholder="UserName"/>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="UpstaticEmail"
+                                            class="col-sm-2 col-form-label"
+                                    >Email</label>
+                                    <div class="col-sm-10">
+                                        <input name="UpInputEmail" type="text" class="form-control text-dark" id="UpstaticEmail" placeholder="email@example.com"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="UpInputPassword"
+                                            class="col-sm-2 col-form-label"
+                                    >Password</label>
+                                    <div class="col-sm-10">
+                                        <input
+                                                name="UpInputPassword"
+                                                type="password"
+                                                class="form-control text-dark"
+                                                id="UpInputPassword"
+                                                placeholder="password"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label
+                                            for="UpConfirmStaticCPassword"
+                                            class="col-sm-2 col-form-label"
+                                    >Confirm Password</label>
+                                    <div class="col-sm-10">
+                                        <input
+
+                                                type="password"
+                                                class="form-control text-dark"
+                                                id="UpConfirmStaticCPassword"
+                                                placeholder="Confirm password"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-sm-2 col-form-label">role</label>
+                                    <div class="col-sm-9">
+                                        <label>
+                                            <select id="UpInputRoles" name="UpInputRole">
+                                                <option value="Admin">Admin</option>
+                                                <option value="User">User</option>
+                                            </select>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >Close
+                            </button>
+                            <button
+                                    type="submit"
+                                    class="btn btn-primary">
+                                Save changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Modal Delete-->
+        <div
+                class="modal fade"
+                id="DeleteModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <form action="/user/delete" method="POST" autocomplete="off">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Xóa User</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-auto">
+                                <div class="mb-3 row">
+                                    <label for="DpInputID" class="col-sm-2 col-form-label">ID:</label>
+                                    <div class="col-sm-10">
+                                        <input
+                                                name="DpInputID"
+                                                readonly
+                                                type="text"
+                                                class="form-control text-dark"
+                                                id="DpInputID"
+                                                placeholder="ID"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                    >No
+                                    </button>
+                                    <button
+                                            type="submit"
+                                            class="btn btn-primary"
+                                            data-bs-dismiss="modal"
+                                    >Yes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
